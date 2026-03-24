@@ -1,0 +1,6 @@
+FPGACourse/
+hackrf/
+*.pdf
+tutorial.py
+tutorial.grc
+Signaltest.py
