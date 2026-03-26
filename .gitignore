@@ -1,6 +1,13 @@
-FPGACourse/
-hackrf/
+*
+!*.*
+*.pcf
+!Hardware/*.pcf
 *.pdf
 tutorial.py
 tutorial.grc
 Signaltest.py
+*.vcd
+5042ev26_ws.pdf
+*.json
+FPGACourse/
+hackrf/

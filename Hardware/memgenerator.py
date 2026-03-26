@@ -1,26 +1,29 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-SAMPLESIZE = 2000
+SAMPLESIZE = 20
+amplitude = 1000
 
-amplitude = 10000
-sinewaves = 10
-rangelist = np.linspace(0, 1, SAMPLESIZE)
+sinewaves = 1
+rangelist = np.linspace(0, 0.25, SAMPLESIZE // 4 + 1)
 
-values, x = [], []
+values = []
 
-with open("FPGACourse/Hardware/hardsin.mem", "w") as f:
+# Make sure the file is empty
+with open("Hardware/hardsin.mem", "w") as f:
     f.close()
 
-with open("FPGACourse/Hardware/hardsin.mem", "w") as f:
+# Write the values to the file.
+# Using a quarter look up table as this saved memory on the FPGA
+with open("Hardware/hardsin.mem", "w") as f:
     for i in range(0, SAMPLESIZE // 4 + 1):
         sinval = int(amplitude * np.sin(2 * np.pi * rangelist[i]) + amplitude)
         hexi = hex(sinval)[2:]
-        x.append(sinval)
         if (i == SAMPLESIZE // 4): f.write(str(hexi))
         else: f.write(str(hexi) + '\n')
 
-with open("FPGACourse/Hardware/hardsin.mem", "r") as f:
+# Read the data and plot it in python to verify a proper sin wave is formed
+with open("Hardware/hardsin.mem", "r") as f:
     lines = [int(x.strip(), 16) for x in f.readlines()]
     topvalue = max(lines)
 
