@@ -5,9 +5,9 @@ module tb_hardware_sinwave();
     reg tb_data = 0;
     wire tb_LED;
     wire tb_old;
-    wire [10:0] tb_sin;
-    wire [4:0] tb_k;
-    wire [2:0] tb_j;
+    wire [20:0] tb_sin;
+    wire [12:0] tb_k;
+    wire [12:0] tb_j;
 
     initial begin
     //    $monitor("%g\t in_clock:%b code_clock:%b data:%b, code:%b", $time, tb_in_clock, tb_code_clock, tb_data, tb_code);

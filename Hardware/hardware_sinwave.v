@@ -1,22 +1,27 @@
 module hardware_sinwave #(
     parameter amplitude = 1000,
-    parameter SAMPLESIZE = 20,
+    parameter SAMPLESIZE = 2048,
     parameter Fourth_of_SAMPLESIZE = SAMPLESIZE / 4,
     parameter half_of_SAMPLESIZE = SAMPLESIZE / 2,
     parameter threequarts_of_SAMPLESIZE = Fourth_of_SAMPLESIZE * 3,
-    parameter highest_value = amplitude * 2
+    parameter highest_value = amplitude * 2,
+    // Payoff between quality and frequency. Higher stepsize is higher frequency, but lower quality (less samples per period).
+    // 103 is chosen so the samples per period is about 20 but the values are irregular, as this makes it easier for the signal to be properly processed.
+    parameter stepSize = 103
 ) (
     input wire clock,
     input wire input_data,
-    output reg [$clog2(amplitude):0] sine_value
+    output reg [$clog2(amplitude):0] sine_value,
+    output reg [$clog2(SAMPLESIZE)-1:0] k,
+    output reg [$clog2(Fourth_of_SAMPLESIZE):0] j
     );
 
     reg [$clog2(amplitude):0] rom_memory [0:Fourth_of_SAMPLESIZE];   
     reg old_data = 0;
     reg [$clog2(amplitude):0] offset;
     reg [$clog2(SAMPLESIZE)-1:0] last_k = 0;
-    reg [$clog2(SAMPLESIZE)-1:0] k = 0;
-    reg [$clog2(Fourth_of_SAMPLESIZE)-1:0] j = 0;
+    // reg [$clog2(SAMPLESIZE):0] k = 0;
+    // reg [$clog2(Fourth_of_SAMPLESIZE)-1:0] j = 0;
 
     initial begin
         $readmemh("Hardware/hardsin.mem", rom_memory); //File with the signal
@@ -45,9 +50,9 @@ module hardware_sinwave #(
             else k <= k + half_of_SAMPLESIZE;
         end else begin
             // Increment k every step until it reaches samplesize, then wrap around
-            if (k == SAMPLESIZE)
-                k <= 1;
-            else k <= k + 1; 
+            if (k >= SAMPLESIZE - stepSize)
+                k <= (k + stepSize) - SAMPLESIZE;
+            else k <= k + stepSize; 
         end
 
         // Division of quadrants 
