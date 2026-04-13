@@ -1,0 +1,33 @@
+It has multiple clocks already on the board, DATA_CLK, FB_CLK, CLK_OUT and SPI_CLK are accesible to the FPGA. 
+
+So we need a Linux distribution on the SD card and download the necessary drivers. Using cat to read and echo to write from /sys/bus/iio/devices/iio:deviceX, we can change things on the FPGA.
+It is volatile, if we want permanent changes, we need a file that runs at startup.
+
+IIO oscilloscope is used for data logging/live feed. For longer data logging on the FPGA, a Integrated Logic Analyzer is used, which captures signal transitions to a VCD file, which I can retrieve and then load into GTKwave. 
+
+Need an external clock??
+
+
+!!!!  sudo shutdown -h now !!!!
+First, upload the image of Linux so the board is configured and I can interact with it
+Try to read and write with cat and echo
+See if I can create a startup file
+Check if I can get the clock with oscilloscope https://wiki.analog.com/resources/eval/user-guides/ad-fmcomms2-ebz/hardware/tuning
+Try to see if I can upload my code to the FPGA
+See if I can record data and see it via GTKWave
+See if I can see the output wave with IIO oscilloscope
+
+
+Git clone the HDL repository: https://github.com/analogdevicesinc/hdl/tree/main/
+Switch to 2023_r2
+source Vivado settings: source 2025.2/Vivado/settings64.sh
+Go to the correct projects folder: adrv9364z7020/ccbob_lvds
+run make
+
+
+Matlab extensions
+
+
+
+
+
