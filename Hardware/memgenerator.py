@@ -3,7 +3,7 @@ import numpy as np
 
 SAMPLESIZE = 1000
 step_size = 1
-amplitude = 10000 # Need the minus one to avoid a zero value at peaks in the Verilog code (the number of bits can't contain the highest value)
+amplitude = 8000 # Need the minus one to avoid a zero value at peaks in the Verilog code (the number of bits can't contain the highest value)
 
 sinewaves = 10
 rangelist = np.linspace(0, 0.25, SAMPLESIZE // 4 + 1)

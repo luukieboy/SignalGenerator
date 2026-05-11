@@ -62,9 +62,9 @@ module sinwave #(
             valid_0 <= 0;
             valid_1 <= 0;
         end else begin
-            if (valid) begin
-            // if (enable_0 && enable_1) begin
-                // Check whether there has been a jump in data, indicating BPSK modulation is needed
+//            if (valid) begin
+             if (enable_0 && enable_1) begin
+//                 Check whether there has been a jump in data, indicating BPSK modulation is needed
                 old_data <= input_data; 
                 if (old_data != input_data) begin
                     // BPSK modulation

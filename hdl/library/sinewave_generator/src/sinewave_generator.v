@@ -6,9 +6,9 @@
 
 // Should run on 1575.42 * SAMPLESIZE / sampleStep MHz
 module sinewave_generator #(
-    parameter amplitude = 1000,
     parameter integer SAMPLESIZE = 1000,
     parameter sampleStep = 1,
+    parameter amplitude = 8000,
     // Chip rate of the PNR code is 1.023 MHz. This means 1575.42 / 1.023 = 1540 so the code goes 1540 times slower 
     // than the sinewave as a whole. So we do have to take into account sampling frequency. If a sine wave consists of 
     // 20 samples, the code_enable frequency is divided by 20 again
