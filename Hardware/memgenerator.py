@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-SAMPLESIZE = 2048
-step_size = 103
-amplitude = 1000
+SAMPLESIZE = 1000
+step_size = 1
+amplitude = 10000 # Need the minus one to avoid a zero value at peaks in the Verilog code (the number of bits can't contain the highest value)
 
 sinewaves = 10
 rangelist = np.linspace(0, 0.25, SAMPLESIZE // 4 + 1)
@@ -18,7 +18,7 @@ with open("Hardware/hardsin.mem", "w") as f:
 # Using a quarter look up table as this saved memory on the FPGA
 with open("Hardware/hardsin.mem", "w") as f:
     for i in range(0, SAMPLESIZE // 4 + 1):
-        sinval = int(amplitude * np.sin(2 * np.pi * rangelist[i]) + amplitude)
+        sinval = int(amplitude * np.sin(2 * np.pi * rangelist[i]))
         hexi = hex(sinval)[2:]
         if (i == SAMPLESIZE // 4): f.write(str(hexi))
         else: f.write(str(hexi) + '\n')
