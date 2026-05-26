@@ -5,6 +5,8 @@
 
 # rf-board
 
+set_false_path -from [get_pins -hierarchical -filter {NAME =~ *DRE_PER*}]
+
 set_property  -dict {PACKAGE_PIN  Y12  IOSTANDARD LVCMOS25} [get_ports gpio_rf0]                     ; ## U1,AA20,IO_L20_13_JX2_P,JX2,62,RF_GPIO0_BANK13
 set_property  -dict {PACKAGE_PIN  Y13  IOSTANDARD LVCMOS25} [get_ports gpio_rf1]                     ; ## U1,AB20,IO_L20_13_JX2_N,JX2,64,RF_GPIO1_BANK13
 set_property  -dict {PACKAGE_PIN  W8  IOSTANDARD LVCMOS25} [get_ports gpio_rf2]                     ; ## U1,AA14,IO_L15_13_JX2_N,JX2,96,RF_GPIO2_BANK12

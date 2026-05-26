@@ -14,7 +14,7 @@ module combine_data(
     end  
 
     always @(posedge clock) begin
-        if (!reset) begin
+        if (reset) begin
             i = 0;
             data = 0;
         end else begin

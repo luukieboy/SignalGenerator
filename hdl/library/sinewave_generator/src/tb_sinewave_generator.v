@@ -27,11 +27,16 @@ module tb_sinewave_generator(
     reg tb_enable_1 = 0;
     reg tb_clock = 0;
     reg tb_reset = 0;
+    reg [2:0] tb_modulation = 1;
     
     wire tb_valid_0;
     wire tb_valid_1;
     wire signed [15:0] tb_I0;
     wire signed [15:0] tb_Q0;
+    wire tb_data_tot;
+    wire tb_code;
+    wire tb_data;
+    wire [15:0] tb_b;
     
     initial begin
        $dumpfile("tb_sinewave_generator.vcd");
@@ -40,7 +45,7 @@ module tb_sinewave_generator(
        #10
        tb_enable_1 <= 1;
        tb_enable_0 <= 1;
-       #10000
+       #1000000
        $finish;
     end
     

@@ -7,52 +7,34 @@ title = f"sinewave generator stepsize 1, samplesize 2048, samplerate normal, yes
 
 sdr = adi.ad9364(uri="ip:192.168.255.1")
 
-# Disable DDS so we can see our own generated signal
-# sdr.disable_dds()
-# sdr.tx_enabled_channels = [0]  # enable channel 0
-# sdr.tx_cyclic_buffer = True  # repeat continuously
-
 # Allow loopback so we see the TX output on the RX input and can log it
-# if sdr.loopback != 1:
-sdr._set_iio_debug_attr_str("loopback", 1)
-# sdr._set_iio_attr("voltage2", "sampling_frequency", "output", 30720000)
-# sdr._set_iio_attr("voltage3", "sampling_frequency", "output", 30720000)
-# sdr._set_iio_attr("voltage0", "sampling_frequency", "input", 30720000)
+sdr._set_iio_debug_attr_str("loopback", "1")
 
+# Frequencies of the transmitter and receiver
+# sdr.rx_lo = 2400000000      # 2.4 GHz carrier
+# sdr.tx_lo = 2400000000
 
+# sdr.sample_rate = 60720000  
 
-# # RX and TX frequency has to match
-# sdr._set_iio_attr("altvoltage1", "frequency", "output", 2400000000)
-# sdr._set_iio_attr("altvoltage0", "frequency", "output", 2400000000)
+print("RX LO:", sdr.rx_lo)
+print("TX LO:", sdr.tx_lo)
+print("Sample rate:", sdr.sample_rate)
 
-sdr.rx_buffer_size = 2000
-# sdr.tx([55])
-sdr.rx_destroy_buffer()
-sdr.tx_destroy_buffer()
-for i in range(5):
-    sdr.rx()
+sdr.rx_buffer_size = 15000
 
-
-
-
+# sdr.tx_hardwaregain_chan0 = 0
+# sdr.rx_hardwaregain_chan0 = 31 
 data = sdr.rx()
+
+
 I_signal = data.real
 Q_signal = data.imag
 
-print(I_signal[:20])
-# with open("notesNOGenerator.txt", "w") as f:
-#     for i in range(len(I_signal)):
-#         f.write(str(I_signal[i]).split(".")[0] + "\n")
- 
-plt.plot(I_signal)
-# plt.plot(Q_signal)
-# plt.plot(Q_signal[::slicesize])
-# plt.title(title)
-# if os.path.isfile(f"../Pictures/{title}.png"):
-#     print("FILE ALREADY EXISTS, CHANGE NAME")
-#     if input("Or do you want to overwrite? (y/N)").lower() == "y":
-#             plt.savefig(f"../Pictures/{title}")
-#     else: print("NOT SAVED")
-# else:
-#     plt.savefig(f"../Pictures/{title}")
+sample_rate = sdr.sample_rate
+t = np.arange(len(I_signal)) / sample_rate  # time axis in seconds
+
+plt.plot(t, data, "blue")
+
+plt.plot(t, I_signal, "orange")
+plt.plot(t, Q_signal, "red")
 plt.show()

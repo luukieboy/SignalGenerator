@@ -56,15 +56,15 @@ ad_connect util_ad9361_divclk/clk_out ila_0/clk
 # ad_connect my_module/Q1                             ila_0/probe5
 
 ad_connect sinewave_gen/I0                               ila_0/probe1
-ad_connect sinewave_gen/Q0                             ila_0/probe5
+# ad_connect sinewave_gen/Q0                             ila_0/probe5
 
-ad_connect axi_ad9361_dac_fifo/dout_data_0                        ila_0/probe10
-ad_connect axi_ad9361_dac_fifo/dout_data_1            ila_0/probe14
+# ad_connect axi_ad9361_dac_fifo/dout_data_0                        ila_0/probe10
+# ad_connect axi_ad9361_dac_fifo/dout_data_1            ila_0/probe14
 ad_connect sinewave_gen/reset                          ila_0/probe3
 
 ad_connect axi_ad9361_dac_fifo/din_enable_0          ila_0/probe29
-ad_connect axi_ad9361/dac_valid_i0                    ila_0/probe35
-ad_connect axi_ad9361/dac_enable_i0                    ila_0/probe19
+# ad_connect sinewave_gen/clock                    ila_0/probe35
+ad_connect sinewave_gen/enable_0                    ila_0/probe19
 # ad_connect my_module/m_axis_valid                          ila_0/probe26
 ad_connect sinewave_gen/valid_0                             ila_0/probe26
 

@@ -311,7 +311,7 @@ ad_ip_parameter axi_ad9361_dac_fifo CONFIG.DOUT_DATA_WIDTH 16
 ad_ip_parameter axi_ad9361_dac_fifo CONFIG.DIN_ADDRESS_WIDTH 4
 ad_connect axi_ad9361/l_clk axi_ad9361_dac_fifo/dout_clk
 ad_connect axi_ad9361/rst axi_ad9361_dac_fifo/dout_rst
-ad_connect util_ad9361_divclk/clk_out axi_ad9361_dac_fifo/din_clk
+ad_connect axi_ad9361/l_clk axi_ad9361_dac_fifo/din_clk
 ad_connect util_ad9361_divclk_reset/peripheral_aresetn axi_ad9361_dac_fifo/din_rstn
 ad_connect axi_ad9361_dac_fifo/dout_enable_0 axi_ad9361/dac_enable_i0
 ad_connect axi_ad9361_dac_fifo/dout_valid_0 axi_ad9361/dac_valid_i0
@@ -330,12 +330,18 @@ ad_connect axi_ad9361_dac_fifo/dout_unf axi_ad9361/dac_dunf
 # instance: Sine wave generator
 # ad_ip_instance test_module my_module
 
-# ad_connect util_ad9361_divclk/clk_out my_module/clock
+# ad_connect axi_ad9361/l_clk my_module/clock
 # ad_connect util_ad9361_divclk_reset/peripheral_reset my_module/reset
 
 ad_ip_instance sinewave_generator sinewave_gen
 
-ad_connect util_ad9361_divclk/clk_out sinewave_gen/clock
+# ad_ip_instance axi_gpio sinewavecontrol
+# ad_ip_parameter sinewavecontrol CONFIG.C_GPIO_WIDTH 2
+# ad_connect sinewavecontrol/gpio_io_o sinewave_gen/modulation
+
+# ad_cpu_interconnect 0x79000000 sinewavecontrol
+
+ad_connect axi_ad9361/l_clk sinewave_gen/clock
 ad_connect util_ad9361_divclk_reset/peripheral_reset sinewave_gen/reset
 
 
@@ -385,7 +391,6 @@ ad_connect sinewave_gen/I0 axi_ad9361_dac_fifo/din_data_0
 ad_connect sinewave_gen/enable_1 axi_ad9361_dac_fifo/din_enable_1
 ad_connect sinewave_gen/valid_1 axi_ad9361_dac_fifo/din_valid_in_1   
 ad_connect sinewave_gen/Q0 axi_ad9361_dac_fifo/din_data_1
-
 
 ad_connect sys_cpu_resetn axi_ad9361_dac_dma/m_src_axi_aresetn
 

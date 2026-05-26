@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-SAMPLESIZE = 1000
+SAMPLESIZE = 2048
 step_size = 1
 amplitude = 8000 # Need the minus one to avoid a zero value at peaks in the Verilog code (the number of bits can't contain the highest value)
 
