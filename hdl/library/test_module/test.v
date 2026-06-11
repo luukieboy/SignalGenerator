@@ -39,6 +39,7 @@ module test(
     reg [15:0] I2_reg = 0;
     reg [15:0] Q2_reg = 0;
     reg valid_r = 1;
+    reg timer = 0;
     
     assign I1 = I1_reg;
     assign Q1 = Q1_reg;
@@ -47,11 +48,14 @@ module test(
     assign m_axis_valid = valid_r;
     
     always @(posedge clock) begin
-        valid_r <= 1;
-        I1_reg <= I1_reg + 1;     
-        I2_reg <= 0;
-        Q1_reg <= 0;
-        Q2_reg <= 0;
+        timer <= !timer;
+        if (timer == 0) begin
+            valid_r <= 1;
+            I1_reg <= I1_reg + 1;     
+            I2_reg <= 0;
+            Q1_reg <= 0;
+            Q2_reg <= 0;
+        end
     end
 
 endmodule

@@ -1,0 +1,6 @@
+the_ROM_image:
+{
+[bootloader] BootFiles/fsbl.elf
+BootFiles/system_top.bit
+BootFiles/u-boot_zynq_zed.elf
+}

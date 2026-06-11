@@ -32,7 +32,7 @@ set_property -dict {PACKAGE_PIN M15 IOSTANDARD LVCMOS25} [get_ports spi_clk]
 set_property -dict {PACKAGE_PIN K16 IOSTANDARD LVCMOS25} [get_ports spi_mosi]
 set_property -dict {PACKAGE_PIN J16 IOSTANDARD LVCMOS25} [get_ports spi_miso]
 
-set_property -dict {PACKAGE_PIN J15 IOSTANDARD LVCMOS25} [get_ports clkout_in]
+set_property -dict {PACKAGE_PIN J15 IOSTANDARD LVDS_25} [get_ports clkout_in]
 
 # iic
 

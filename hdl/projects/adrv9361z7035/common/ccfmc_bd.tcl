@@ -43,7 +43,6 @@ ad_ip_parameter sys_rgmii CONFIG.SupportLevel Include_Shared_Logic_in_Core
 ad_ip_instance proc_sys_reset sys_rgmii_rstgen
 ad_ip_parameter sys_rgmii_rstgen CONFIG.C_EXT_RST_WIDTH 1
 
-
 ad_ip_instance ila ila_0
 ad_ip_parameter ila_0 CONFIG.C_NUM_OF_PROBES 4
 ad_ip_parameter ila_0 CONFIG.C_DATA_DEPTH 1024
@@ -52,26 +51,23 @@ ad_ip_parameter ila_0 CONFIG.C_DATA_DEPTH 1024
 ad_connect util_ad9361_divclk/clk_out ila_0/clk
 
 # Connect probes
-# ad_connect my_module/I1                               ila_0/probe1
-# ad_connect my_module/Q1                             ila_0/probe5
 
 ad_connect sinewave_gen/I0                               ila_0/probe1
-# ad_connect sinewave_gen/Q0                             ila_0/probe5
+ad_connect sinewavecontrol3/gpio_io_o                             ila_0/probe5
 
-# ad_connect axi_ad9361_dac_fifo/dout_data_0                        ila_0/probe10
-# ad_connect axi_ad9361_dac_fifo/dout_data_1            ila_0/probe14
 ad_connect sinewave_gen/reset                          ila_0/probe3
 
-ad_connect axi_ad9361_dac_fifo/din_enable_0          ila_0/probe29
-# ad_connect sinewave_gen/clock                    ila_0/probe35
+ad_connect sinewave_gen/param_3_out          ila_0/probe10
+ad_connect sinewave_gen/in_reset                    ila_0/probe35
 ad_connect sinewave_gen/enable_0                    ila_0/probe19
-# ad_connect my_module/m_axis_valid                          ila_0/probe26
 ad_connect sinewave_gen/valid_0                             ila_0/probe26
-
-# ad_connect axi_ad9361/dac_r1_mode                    ila_0/probe29
-
+ad_connect sinewave_gen/frac_counter                        ila_0/probe14
+ad_connect sinewave_gen/stepSize                            ila_0/probe21
 ad_connect axi_ad9361_dac_fifo/din_valid_0                  ila_0/probe27
-
+ad_connect sinewave_gen/code_enable                         ila_0/probe2
+ad_connect sinewave_gen/data_enable                         ila_0/probe4
+ad_connect sinewave_gen/data_comb                           ila_0/probe6
+ad_connect sinewave_gen/BPSK                                ila_0/probe7
 
 
 set_property DONT_TOUCH true \

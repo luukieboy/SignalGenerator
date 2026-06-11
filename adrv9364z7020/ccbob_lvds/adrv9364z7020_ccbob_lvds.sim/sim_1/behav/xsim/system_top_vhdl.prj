@@ -1,8 +1,0 @@
-# compile vhdl design source files
-vhdl xil_defaultlib  \
-"../../../../adrv9364z7020_ccbob_lvds.ip_user_files/bd/system/ip/system_axi_iic_main_0/sim/system_axi_iic_main_0.vhd" \
-"../../../../adrv9364z7020_ccbob_lvds.ip_user_files/bd/system/ip/system_sys_rstgen_0/sim/system_sys_rstgen_0.vhd" \
-"../../../../adrv9364z7020_ccbob_lvds.ip_user_files/bd/system/ip/system_util_ad9361_divclk_reset_0/sim/system_util_ad9361_divclk_reset_0.vhd" \
-
-# Do not sort compile order
-nosort

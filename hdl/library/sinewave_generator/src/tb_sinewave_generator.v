@@ -28,6 +28,8 @@ module tb_sinewave_generator(
     reg tb_clock = 0;
     reg tb_reset = 0;
     reg [2:0] tb_modulation = 1;
+    reg [31:0] tb_param = 0;
+    reg [31:0] tb_param2 = 0;
     
     wire tb_valid_0;
     wire tb_valid_1;
@@ -59,7 +61,9 @@ module tb_sinewave_generator(
         .valid_0(tb_valid_0),
         .valid_1(tb_valid_1),
         .I0(tb_I0),
-        .Q0(tb_Q0)
+        .Q0(tb_Q0),
+        .param(tb_param),
+        .param_2(tb_param2)
    );
     
 endmodule

@@ -118,6 +118,9 @@ module system_top (
   inout           iic_scl,
   inout           iic_sda,
 
+  inout           iic_gnss_scl,
+  inout           iic_gnss_sda,
+
   // 183
 
   // Board control, switches/LED/buttons
@@ -390,6 +393,8 @@ module system_top (
     // .i2s_sdata_out (i2s_sdata_out),
     .iic_main_scl_io (iic_scl),
     .iic_main_sda_io (iic_sda),
+    .iic_gnss_scl_io(iic_gnss_scl),
+    .iic_gnss_sda_io(iic_gnss_sda),
     .otg_vbusoc (1'b0),
     .rx_clk_in_n (rx_clk_in_n),
     .rx_clk_in_p (rx_clk_in_p),

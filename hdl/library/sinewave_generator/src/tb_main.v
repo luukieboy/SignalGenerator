@@ -5,7 +5,7 @@
 // 
 // Create Date: 03/13/2026 03:49:34 PM
 // Design Name: 
-// Module Name: tb_sinwave
+// Module Name: tb_sinewave
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
