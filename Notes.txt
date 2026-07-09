@@ -1,9 +1,0 @@
-How is navigation data generated? Will that be done on a different board, am I working with an external source here?
-
-Stuck on how to verify, test
-Working on understanding timing and different clock domains
-All code is basically done and softwarewise it is working
-Next step is to start putting it onto the FPGA and verify it
-What is the input data line?
-What do we want in terms of amplitude and frequency on the FPGA, e.g. will there be an upconverter later on?
-

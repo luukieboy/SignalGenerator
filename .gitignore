@@ -19,7 +19,12 @@ temp*
 *.bxml
 *.hwh
 *.xsa
-
+BOOT.bin
+devicetree.dtb
+testing.py
+uImage
+*.odt
+BootFiles/
 
 # Vivado build outputs
 *.cache
