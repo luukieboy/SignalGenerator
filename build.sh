@@ -9,7 +9,7 @@ boot() {
 }
 
 build_and_boot() {
-        cd ../hdl/library/sinewave_generator/ &&
+        cd hdl/library/sinewave_generator/ &&
         sudo make clean &&
         make &&
         cd ../../projects/adrv9361z7035/ccfmc_lvds/ &&
