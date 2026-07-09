@@ -8,7 +8,7 @@
 
 create_bd_intf_port -mode Master -vlnv xilinx.com:interface:ddrx_rtl:1.0 ddr
 create_bd_intf_port -mode Master -vlnv xilinx.com:interface:iic_rtl:1.0 iic_main
-create_bd_intf_port -mode Master -vlnv xilinx.com:interface:iic_rtl:1.0 iic_gnss
+# create_bd_intf_port -mode Master -vlnv xilinx.com:interface:iic_rtl:1.0 iic_gnss
 create_bd_intf_port -mode Master -vlnv xilinx.com:display_processing_system7:fixedio_rtl:1.0 fixed_io
 
 create_bd_port -dir O spi0_csn_2_o
@@ -101,7 +101,9 @@ ad_ip_instance axi_iic axi_iic_main
 ad_ip_parameter axi_iic_main CONFIG.USE_BOARD_FLOW true
 ad_ip_parameter axi_iic_main CONFIG.IIC_BOARD_INTERFACE Custom
 
-ad_ip_instance axi_iic iic_gnss
+# ad_ip_instance axi_iic axi_iic_gnss
+# ad_ip_parameter axi_iic_gnss CONFIG.USE_BOARD_FLOW true
+# ad_ip_parameter axi_iic_gnss CONFIG.IIC_BOARD_INTERFACE Custom
 
 ad_ip_instance xlconcat sys_concat_intc
 ad_ip_parameter sys_concat_intc CONFIG.NUM_PORTS 16
@@ -130,7 +132,7 @@ ad_connect gpio_o sys_ps7/GPIO_O
 ad_connect gpio_t sys_ps7/GPIO_T
 ad_connect fixed_io sys_ps7/FIXED_IO
 ad_connect iic_main axi_iic_main/iic
-ad_connect iic_gnss iic_gnss/iic
+# ad_connect iic_gnss axi_iic_gnss/iic
 ad_connect sys_logic_inv/Res sys_ps7/USB0_VBUS_PWRFAULT
 ad_connect sys_logic_inv/Op1 otg_vbusoc
 
@@ -169,8 +171,9 @@ ad_connect  sys_cpu_clk                 rom_sys_0/clk
 
 ad_connect sys_concat_intc/dout sys_ps7/IRQ_F2P
 ad_connect sys_concat_intc/In15 GND
+# ad_connect sys_concat_intc/In15 axi_iic_gnss/iic2intc_irpt
 ad_connect sys_concat_intc/In14 axi_iic_main/iic2intc_irpt
-ad_connect sys_concat_intc/In13 iic_gnss/iic2intc_irpt
+ad_connect sys_concat_intc/In13 GND
 ad_connect sys_concat_intc/In12 GND
 ad_connect sys_concat_intc/In11 GND
 ad_connect sys_concat_intc/In10 GND
@@ -189,7 +192,7 @@ ad_connect sys_concat_intc/In0  GND
 
 ad_cpu_interconnect 0x45000000 axi_sysid_0
 ad_cpu_interconnect 0x41600000 axi_iic_main
-ad_cpu_interconnect 0x41620000 iic_gnss
+# ad_cpu_interconnect 0x41620000 axi_iic_gnss
 
 # ad9361
 
@@ -343,9 +346,17 @@ ad_ip_instance axi_gpio sinewavecontrol
 ad_cpu_interconnect 0x79000000 sinewavecontrol
 ad_connect sinewavecontrol/gpio_io_o sinewave_gen/param
 
+# Used to send GNSS data from the receiver to the FPGA data module
 ad_ip_instance axi_gpio gnssdata
 ad_cpu_interconnect 0x780F0000 gnssdata
 ad_connect gnssdata/gpio_io_o sinewave_gen/nav_data
+# The i line is the feedback line
+ad_connect gnssdata/gpio_io_i sinewave_gen/nav_out
+
+# Current UCT time from the GNSS receiver
+ad_ip_instance axi_gpio UCTtime
+ad_cpu_interconnect 0x780E0000 UCTtime
+ad_connect UCTtime/gpio_io_o sinewave_gen/UCTclock 
 
 # Used for the second set of parameters
 ad_ip_instance axi_gpio sinewavecontrol2

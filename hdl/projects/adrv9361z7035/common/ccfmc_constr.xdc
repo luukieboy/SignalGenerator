@@ -10,6 +10,9 @@ set_false_path -from [get_pins -hierarchical -filter {NAME =~ *DRE_PER*}]
 # Sinewave control module only updates parameters when necessary, so no strict time is needed
 set_false_path -through [get_nets -hierarchical -filter {NAME =~ *sinewavecontrol*}]
 set_false_path -through [get_nets -hierarchical -filter {NAME =~ *sinewavecontrol2*}]
+set_false_path -through [get_nets -hierarchical -filter {NAME =~ *sinewavecontrol3*}]
+set_false_path -through [get_nets -hierarchical -filter {NAME =~ *UCTtime*}]
+set_false_path -through [get_nets -hierarchical -filter {NAME =~ *gnssdata*}]
 set_false_path -through [get_nets -hierarchical -filter {NAME =~ *BPSK*}]
 
 set_property  -dict {PACKAGE_PIN  Y12  IOSTANDARD LVCMOS25} [get_ports gpio_rf0]                     ; ## U1,Y12,IO_L20_13_JX2_P,JX2,62,RF_GPIO0_BANK13
@@ -39,8 +42,8 @@ set_property  -dict {PACKAGE_PIN  U20    IOSTANDARD LVCMOS25} [get_ports eth1_rg
 
 # GNSS receiver
 
-set_property  -dict {PACKAGE_PIN  V11    IOSTANDARD LVCMOS25 PULLTYPE PULLUP} [get_ports iic_gnss_sda]         ; ## PMOD0,D0,IO_L21_13_JX2_P,JX2,67,iic_gnss_sda
-set_property  -dict {PACKAGE_PIN  V10    IOSTANDARD LVCMOS25 PULLTYPE PULLUP} [get_ports iic_gnss_scl]         ; ## PMO0,D1,IO_L21_13_JX2_N,JX2,69,iic_gnss_scl
+set_property  -dict {PACKAGE_PIN  V11    IOSTANDARD LVCMOS25 PULLTYPE PULLUP} [get_ports iic_gnss_sda]         ; ## PMOD0,D0,IO_L21_13_JX2_P,JX2,67,iic_gnss_sda, blue wire
+set_property  -dict {PACKAGE_PIN  V10    IOSTANDARD LVCMOS25 PULLTYPE PULLUP} [get_ports iic_gnss_scl]         ; ## PMO0,D1,IO_L21_13_JX2_N,JX2,69,iic_gnss_scl, yellow wire
 
 # ad9517
 

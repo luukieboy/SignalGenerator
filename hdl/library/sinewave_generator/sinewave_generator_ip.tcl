@@ -6,9 +6,10 @@ global VIVADO_IP_LIBRARY
 adi_ip_create sinewave_generator
 adi_ip_files sinewave_generator [list \
 	"src/sinewave_generator.v" \
-	"src/combine_data.v" \
+	"src/data_module.v" \
 	"src/sinewave.v" \
 	"src/PRN_code.v" \
+	"src/FEC_encoder.v" \
 	"src/sine.mem" \
 	"src/data.mem" \
 ]
