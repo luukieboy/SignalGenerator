@@ -9,6 +9,7 @@ boot() {
 }
 
 build_and_boot() {
+        source /tools/Xilinx/Vivado/2023.2/settings64.sh
         cd hdl/library/sinewave_generator/ &&
         sudo make clean &&
         make &&
