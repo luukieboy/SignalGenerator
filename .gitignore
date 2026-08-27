@@ -11,7 +11,6 @@ ipcache/
 temp*
 *gui/
 *.tcl
-*.v
 *.txt
 *.wdf
 *.xdc
@@ -25,6 +24,7 @@ testing.py
 uImage
 *.odt
 BootFiles/
+hdl/projects/adrv9361z7035/ip_repo/
 
 # Vivado build outputs
 *.cache
@@ -67,3 +67,6 @@ tb/xsim_gui_cmd.tcl
 
 # IP cache (fully regenerated on build)
 hdl/ipcache/
+
+/UserFiles/fullTest.py
+/UserFiles/receiver.py

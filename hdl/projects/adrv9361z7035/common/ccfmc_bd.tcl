@@ -52,21 +52,30 @@ ad_connect util_ad9361_divclk/clk_out ila_0/clk
 
 # Connect probes
 
-ad_connect sinewave_gen/I0                               ila_0/probe1
-ad_connect sinewavecontrol3/gpio_io_o                             ila_0/probe5
+ad_connect sinewave_gen/param_3                              ila_0/probe1
+# ad_connect sinewave_gen/feedback_LED          ila_0/probe3
+ad_connect sinewave_gen/warning_counter            ila_0/probe5
+# ad_connect sinewave_gen/counter              ila_0/probe14
+# ad_connect sinewave_gen/datavalid         ila_0/probe2
+# ad_connect sinewave_gen/selector          ila_0/probe3
+# ad_connect sinewave_gen/data_send         ila_0/probe4
+# ad_connect sinewave_gen/data_enable       ila_0/probe6
+# ad_connect sinewave_gen/fecvalid        ila_0/probe7
+# ad_connect sinewave_gen/crcvalid        ila_0/probe8
 
-ad_connect sinewave_gen/reset                          ila_0/probe3
+# ad_connect sinewavecontrol3/gpio_io_o                             ila_0/probe5
 
-ad_connect sinewave_gen/param_3_out          ila_0/probe10
+# ad_connect sinewave_gen/clock                          ila_0/probe3
+
 # ad_connect sinewave_gen/in_reset                    ila_0/probe35
 # ad_connect sinewave_gen/enable_0                    ila_0/probe19
 # ad_connect sinewave_gen/valid_0                             ila_0/probe26
 # ad_connect iic_gnss/iic                        ila_0/probe14
 # ad_connect sinewave_gen/stepSize                            ila_0/probe21
 # ad_connect axi_ad9361_dac_fifo/din_valid_0                  ila_0/probe27
-ad_connect sinewave_gen/code_enable                         ila_0/probe2
-ad_connect sinewave_gen/data_enable                         ila_0/probe4
-ad_connect sinewave_gen/data_comb                           ila_0/probe6
+# ad_connect sinewave_gen/code_enable                         ila_0/probe2
+# ad_connect sinewave_gen/data_enable                         ila_0/probe4
+# ad_connect sinewave_gen/data_comb                           ila_0/probe6
 # ad_connect sinewave_gen/BPSK                                ila_0/probe7
 
 

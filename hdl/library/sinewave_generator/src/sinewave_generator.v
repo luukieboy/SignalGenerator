@@ -3,12 +3,23 @@
 // Data and code enables are created, which are fed into the modules to create a data and code line.
 // These lines are combined with XOR to create a data line for the sinewave generator module, which uses it to modulate.
 module sinewave_generator #(
-    parameter DATASIZE = 240,
-    parameter rowLength = 30,
-    parameter columnsize = 8,
-    parameter SAMPLESIZE = 2044,
-    // parameter stepSize = 104,
-    parameter amplitude = 32767
+    // Parameters for data module
+    parameter DATASIZE = 120,               // Standard datasize of Galileo subpage
+    parameter twiceDATA = 2 * DATASIZE,
+    parameter ROWLENGTH = 30,
+    parameter COLUMNSIZE = 8,
+    parameter MSGLENGTH = 196,
+    parameter POLYLENGTH = 25,
+    parameter POLYNOMIAL = 24'b100001100100110011111011,
+    
+    // Parameters for PRN module
+    parameter TAPSREGISTER1 = 14'b11010000001000, 
+    parameter TAPSREGISTER2 = 14'b10100110010010,
+    parameter STARTVALUEREGISTER1 = 14'b11111111111111,         // Same for all codes
+    parameter STARTVALUEREGISTER2 = 14'b111010010000,
+    
+    parameter SAMPLESIZE = 2048,
+    parameter AMPLITUDE = 32767
     // Chip rate of the PRN code is 1.023 MHz. This means 1575.42 / 1.023 = 1540 so the code goes 1540 times slower 
     // than the sinewave as a whole. So we do have to take into account sampling frequency. If a sine wave consists of 
     // 20 samples, the code_enable frequency is divided by 20 again
@@ -25,7 +36,7 @@ module sinewave_generator #(
     input wire [31:0] param_2,
     input wire [31:0] param_3,
     input wire [31:0] nav_data,
-    input wire [31:0] UCTclock,
+    input wire [31:0] UTCclock,
 
     output wire valid_0,
     output wire valid_1,
@@ -33,108 +44,141 @@ module sinewave_generator #(
     output wire signed [15:0] Q0,
     output wire [31:0] param_3_out,
     output wire [31:0] nav_out,
-
-    output wire code_enable,
-    output wire data_enable, 
-    output wire data_comb
+    output reg feedback_LED,
+    output reg [31:0] warning_counter
    );
 
-    wire [9:0] stepSize; // max value is 2048
+    wire [9:0] stepSize;
     wire in_reset; // This reset line needs to be pulled high to recompute the fraction
-    wire [10:0] fraction;
+    wire [15:0] fraction;
     wire data;
     wire code;
-    // wire data_comb;
-    // wire code_enable; 
-    // wire data_enable;
+    wire data_comb;
+    wire code_enable; 
+    wire data_enable;
     wire data_valid;
     
     reg [14:0] b;
     reg [31:0] i;
-    reg [31:0] par_reg1, par_reg2, par2_reg1, par2_reg2, par3_reg1, par3_reg2, nav_data_reg1, nav_data_reg2;
-    reg [29:0] UCTclock_reg1, UCTclock_reg2;
-    reg [10:0] frac_counter;
+    reg [15:0] frac_counter;
+    reg [31:0] error_counter;
+    // reg [31:0] warning_counter;
     
-    assign data_comb = code ^ data;
+    // Code is 1 at startup. To prevent it tampering with data_comb, disable it from influencing when 
+    // modulation is not code only or BPSK.
+//    assign data_comb = data;
+    assign data_comb = (param[2]) ? code : ((param[1]) ? data : code ^ data);
+    assign code_enable = (b == 0);  // Make sure modulation is set to code only or BPSK
+    assign data_enable = (i == 0);  // Make sure modulation is set to data only or BPSK
+    
+    assign in_reset = param[31] | reset;
+    assign fraction = param_3[15:0];
+    assign stepSize = param[15:6];
+    assign param_3_out[15:0] = SAMPLESIZE;
 
-    assign code_enable = (b == 0); 
-    assign in_reset = par_reg2[31] | reset;
+    // For BPSK not necessary, here for future development and use
+//    assign Q0 = 0; 
 
-    assign data_enable = (i == 0);
-
-    assign fraction = par3_reg2[31:21];
-    assign stepSize = par_reg2[15:6];
-    assign param_3_out[20:10] = SAMPLESIZE;
-    assign Q0 = 0;
-
-    initial frac_counter = fraction;
-
-    // Incoming GPIO busses are asynchronous, so metastability has to be prevented
-    always @(posedge clock) begin
-        par_reg1 <= param;
-        par_reg2 <= par_reg1;
-
-        par2_reg1 <= param_2;
-        par2_reg2 <= par2_reg1;
-
-        par3_reg1 <= param_3;
-        par3_reg2 <= par3_reg1;
-
-        nav_data_reg1 <= nav_data;
-        nav_data_reg2 <= nav_data_reg1;
-
-        UCTclock_reg1 <= UCTclock[29:0];
-        UCTclock_reg2 <= UCTclock_reg1;
+    initial begin
+        b = param[30:16];
+        i = param_2;
+        frac_counter = fraction;
+        feedback_LED = 0;
+        error_counter = 10000000;
+        warning_counter = 100000000;
     end
-        
-    always @(posedge clock) begin
+    
+    // Notify the user when the Python script on the board is malfunctioning
+    // always #1 begin
+    //     if (param_3[16]) feedback_LED <= ~feedback_LED;
+    // end 
+
+    always @(posedge clock) begin 
+        if (param_3[16]) begin
+            if (error_counter == 0) begin
+                feedback_LED <= ~feedback_LED;
+                error_counter <= 10000000;
+            end else error_counter <= error_counter - 1;
+        end else if (param_3[17]) begin
+            if (warning_counter == 0) begin
+                feedback_LED <= ~feedback_LED;
+                warning_counter <= 100000000;
+            end else warning_counter <= warning_counter - 1;
+        end
+
+
         if (in_reset) begin
-            b <= par_reg2[30:16];
-            i <= par2_reg2;
+            b <= param[30:16];
+            i <= param_2;
             frac_counter <= fraction;
         end else begin
-            if (enable_0 && enable_1) begin
-                if (frac_counter == 0) begin
-                    if (code_enable)
-                        b <= par_reg2[30:16];
-                    else 
-                        b <= b - 1;
-                    // Make sure the data only loops around if it is ready, otherwise it will wait and be a few ticks delayed
-                    if (data_enable & data_valid)
-                        i <= par2_reg2;
-                    else if (~data_enable)
-                        i <= i - 1;
-                    frac_counter <= fraction - 1; // Fraction is set to the steps untill reset. If fraction is 40, it would take 41 steps to go from 0 to 0 again because of this reset step. 
-                end else begin
-                    if (code_enable)
-                        b <= par_reg2[30:16];
-                    if (data_enable & data_valid)
-                        i <= par2_reg2;
-                    frac_counter <= frac_counter - 1;
-                end
-            end             
+            // Ensure modulation is not turned off 
+            if ((enable_0 | enable_1) & ~param[0]) begin
+                if (data_valid | param[2]) begin
+                    if (~param_3[16] & ~param_3[17]) feedback_LED <= 0;
+                    if (frac_counter == 0) begin
+                        if ((param[2] | param[3])) begin
+                            if (code_enable)
+                                b <= param[30:16];
+                            else
+                                b <= b - 1;
+                        end
+                        // Make sure the data only loops around if it is ready, otherwise it will wait and be a few ticks delayed
+                        if (param[1] | param[3]) begin
+                            if (data_enable) begin
+                                i <= param_2;
+                            end else begin
+                                i <= i - 1;
+                            end
+                        end
+                        // Fraction is set to the steps until reset. If fraction is 40, it would take 41 steps to go from 0 to 
+                        // 0 again because of this reset step. 
+                        frac_counter <= fraction - 1; 
+                    end else begin
+                        if (code_enable & (param[2] | param[3]))
+                            b <= param[30:16];
+                        if (data_enable & (param[1] | param[3])) begin
+                            i <= param_2;
+                        end
+                        frac_counter <= frac_counter - 1;
+                    end
+                end else if (~param_3[16] & ~param_3[17] & ~data_valid & ~param[0]) feedback_LED <= 1; // When data is not ready, no modulation is applied and an LED is turned on for visual indication
+            end 
         end
     end
     
     data_module #(
         .DATASIZE(DATASIZE),
-        .rowLength(rowLength),
-        .columnsize(columnsize)
+        .ROWLENGTH(ROWLENGTH),
+        .COLUMNSIZE(COLUMNSIZE),
+        .MSGLENGTH(MSGLENGTH),
+        .POLYLENGTH(POLYLENGTH),
+        .POLYNOMIAL(POLYNOMIAL)
     ) dat(
         .clock(clock), 
         .reset(in_reset), 
         .data_enable(data_enable), 
-        .UCTclock(UCTclock_reg2),
-        .nav_data(nav_data_reg2), 
+        .UTCclock(UTCclock),
+        .nav_data(nav_data), 
         .data_valid(data_valid),
         .data(data), 
-        .data_selector(nav_out[1:0])
+        .data_selector(nav_out[2:0])
     );
 
-    PRN prncode(clock, in_reset, code_enable, code);
+    PRN  #(
+        .TAPSREGISTER1(TAPSREGISTER1),
+        .TAPSREGISTER2(TAPSREGISTER2),
+        .STARTVALUEREGISTER1(STARTVALUEREGISTER1),
+        .STARTVALUEREGISTER2(STARTVALUEREGISTER2)
+    ) prncode (
+        .clock(clock), 
+        .reset(in_reset), 
+        .code_enable(code_enable), 
+        .code(code)
+    );
 
     sinewave #(
-        .amplitude(amplitude), 
+        .AMPLITUDE(AMPLITUDE), 
         .SAMPLESIZE(SAMPLESIZE)
     ) sinus (
         .stepSize(stepSize),
@@ -146,8 +190,8 @@ module sinewave_generator #(
         .valid_0(valid_0),
         .valid_1(valid_1),
         .I_data_0(I0),
-        .modulation(par_reg2[5:0])
-        // .Q_data_1(Q0),
+        .modulation(param[5:0]),
+        .Q_data_1(Q0)
     );
 
 endmodule

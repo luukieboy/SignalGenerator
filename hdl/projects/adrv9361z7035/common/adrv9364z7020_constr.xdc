@@ -39,6 +39,15 @@ set_property -dict {PACKAGE_PIN J15 IOSTANDARD LVDS_25} [get_ports clkout_in]
 set_property  -dict {PACKAGE_PIN  W6   IOSTANDARD LVCMOS25 PULLTYPE PULLUP} [get_ports iic_scl]           ; ## IO_L22N_T3_13                U1,W6,SCL,JX2,17,I2C_SCL
 set_property  -dict {PACKAGE_PIN  V6   IOSTANDARD LVCMOS25 PULLTYPE PULLUP} [get_ports iic_sda]           ; ## IO_L22P_T3_13                U1,V6,SDA,JX2,19,I2C_SDA
 
+# GNSS receiver
+
+set_property  -dict {PACKAGE_PIN  V11    IOSTANDARD LVCMOS25} [get_ports UART_gnss_pps]         ; ## PMOD0,D0,IO_L21_13_JX2_P,JX2,67,UART_gnss_pps, blue wire
+set_property  -dict {PACKAGE_PIN  V10    IOSTANDARD LVCMOS25} [get_ports UART_gnss_rx]         ; ## PMOD0,D1,IO_L21_13_JX2_N,JX2,69,UART_gnss_rx, yellow wire
+
+# Feedback LED
+set_property  -dict {PACKAGE_PIN  Y19    IOSTANDARD LVCMOS25} [get_ports feedback_LED]         ; ## U1,LED_GPIO_0,IO_L17_34_JX4_N,JX4,69,ETH1_TXD3
+
+
 ##    reference-only
 ##    --------------
 ##    ad9361 (optional rf-card)

@@ -118,8 +118,9 @@ module system_top (
   inout           iic_scl,
   inout           iic_sda,
 
-  // inout           iic_gnss_scl,
-  // inout           iic_gnss_sda,
+  input           UART_gnss_rx,
+  input           UART_gnss_pps,
+  output          feedback_LED,
 
   // 183
 
@@ -374,7 +375,7 @@ module system_top (
     .gpio_i (gpio_i),
     .gpio_o (gpio_o),
     .gpio_t (gpio_t),
-    .gps_pps (1'b0),
+    .gps_pps (UART_gnss_pps),
     // .gt_ref_clk_0 (gt_ref_clk_0),
     // .gt_ref_clk_1 (gt_ref_clk_1),
     // .gt_rx_n (gt_rx_n),
@@ -393,8 +394,8 @@ module system_top (
     // .i2s_sdata_out (i2s_sdata_out),
     .iic_main_scl_io (iic_scl),
     .iic_main_sda_io (iic_sda),
-    // .iic_gnss_scl_io(iic_gnss_scl),
-    // .iic_gnss_sda_io(iic_gnss_sda),
+    .UART_gnss_rx(UART_gnss_rx),
+    .feedback_LED(feedback_LED),  
     .otg_vbusoc (1'b0),
     .rx_clk_in_n (rx_clk_in_n),
     .rx_clk_in_p (rx_clk_in_p),

@@ -12,6 +12,7 @@ adi_ip_files sinewave_generator [list \
 	"src/FEC_encoder.v" \
 	"src/sine.mem" \
 	"src/data.mem" \
+	"src/CRC_module.v" \
 ]
 
 adi_ip_properties_lite sinewave_generator

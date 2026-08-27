@@ -11,9 +11,10 @@ set_false_path -from [get_pins -hierarchical -filter {NAME =~ *DRE_PER*}]
 set_false_path -through [get_nets -hierarchical -filter {NAME =~ *sinewavecontrol*}]
 set_false_path -through [get_nets -hierarchical -filter {NAME =~ *sinewavecontrol2*}]
 set_false_path -through [get_nets -hierarchical -filter {NAME =~ *sinewavecontrol3*}]
-set_false_path -through [get_nets -hierarchical -filter {NAME =~ *UCTtime*}]
+set_false_path -through [get_nets -hierarchical -filter {NAME =~ *UTCtime*}]
 set_false_path -through [get_nets -hierarchical -filter {NAME =~ *gnssdata*}]
 set_false_path -through [get_nets -hierarchical -filter {NAME =~ *BPSK*}]
+set_false_path -through [get_nets -hierarchical -filter {NAME =~ *ila_0*}]
 
 set_property  -dict {PACKAGE_PIN  Y12  IOSTANDARD LVCMOS25} [get_ports gpio_rf0]                     ; ## U1,Y12,IO_L20_13_JX2_P,JX2,62,RF_GPIO0_BANK13
 set_property  -dict {PACKAGE_PIN  Y13  IOSTANDARD LVCMOS25} [get_ports gpio_rf1]                     ; ## U1,Y13,IO_L20_13_JX2_N,JX2,64,RF_GPIO1_BANK13
@@ -40,10 +41,6 @@ set_property  -dict {PACKAGE_PIN  P20    IOSTANDARD LVCMOS25} [get_ports eth1_rg
 set_property  -dict {PACKAGE_PIN  T20    IOSTANDARD LVCMOS25} [get_ports eth1_rgmii_txdata[2]]         ; ## U1,C9,IO_L15_34_JX4_P,JX4,57,ETH1_TXD2
 set_property  -dict {PACKAGE_PIN  U20    IOSTANDARD LVCMOS25} [get_ports eth1_rgmii_txdata[3]]         ; ## U1,B9,IO_L15_34_JX4_N,JX4,59,ETH1_TXD3
 
-# GNSS receiver
-
-set_property  -dict {PACKAGE_PIN  V11    IOSTANDARD LVCMOS25 PULLTYPE PULLUP} [get_ports iic_gnss_sda]         ; ## PMOD0,D0,IO_L21_13_JX2_P,JX2,67,iic_gnss_sda, blue wire
-set_property  -dict {PACKAGE_PIN  V10    IOSTANDARD LVCMOS25 PULLTYPE PULLUP} [get_ports iic_gnss_scl]         ; ## PMO0,D1,IO_L21_13_JX2_N,JX2,69,iic_gnss_scl, yellow wire
 
 # ad9517
 

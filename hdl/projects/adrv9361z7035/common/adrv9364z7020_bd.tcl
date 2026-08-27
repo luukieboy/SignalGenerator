@@ -8,7 +8,6 @@
 
 create_bd_intf_port -mode Master -vlnv xilinx.com:interface:ddrx_rtl:1.0 ddr
 create_bd_intf_port -mode Master -vlnv xilinx.com:interface:iic_rtl:1.0 iic_main
-# create_bd_intf_port -mode Master -vlnv xilinx.com:interface:iic_rtl:1.0 iic_gnss
 create_bd_intf_port -mode Master -vlnv xilinx.com:display_processing_system7:fixedio_rtl:1.0 fixed_io
 
 create_bd_port -dir O spi0_csn_2_o
@@ -34,6 +33,10 @@ create_bd_port -dir I spi1_sdi_i
 create_bd_port -dir I -from 63 -to 0 gpio_i
 create_bd_port -dir O -from 63 -to 0 gpio_o
 create_bd_port -dir O -from 63 -to 0 gpio_t
+
+create_bd_port -dir I UART_gnss_rx
+create_bd_port -dir O feedback_LED
+
 
 # otg
 
@@ -101,9 +104,12 @@ ad_ip_instance axi_iic axi_iic_main
 ad_ip_parameter axi_iic_main CONFIG.USE_BOARD_FLOW true
 ad_ip_parameter axi_iic_main CONFIG.IIC_BOARD_INTERFACE Custom
 
-# ad_ip_instance axi_iic axi_iic_gnss
-# ad_ip_parameter axi_iic_gnss CONFIG.USE_BOARD_FLOW true
-# ad_ip_parameter axi_iic_gnss CONFIG.IIC_BOARD_INTERFACE Custom
+ad_ip_instance axi_uartlite axi_uart_gnss
+ad_connect axi_uart_gnss/rx UART_gnss_rx
+ad_connect axi_uart_gnss/s_axi_aclk sys_cpu_clk 
+ad_connect axi_uart_gnss/s_axi_aresetn sys_cpu_resetn
+ad_ip_parameter axi_uart_gnss CONFIG.C_BAUDRATE 38400
+ad_ip_parameter axi_uart_gnss CONFIG.C_S_AXI_ACLK_FREQ_HZ 100000000
 
 ad_ip_instance xlconcat sys_concat_intc
 ad_ip_parameter sys_concat_intc CONFIG.NUM_PORTS 16
@@ -132,7 +138,7 @@ ad_connect gpio_o sys_ps7/GPIO_O
 ad_connect gpio_t sys_ps7/GPIO_T
 ad_connect fixed_io sys_ps7/FIXED_IO
 ad_connect iic_main axi_iic_main/iic
-# ad_connect iic_gnss axi_iic_gnss/iic
+
 ad_connect sys_logic_inv/Res sys_ps7/USB0_VBUS_PWRFAULT
 ad_connect sys_logic_inv/Op1 otg_vbusoc
 
@@ -170,8 +176,7 @@ ad_connect  sys_cpu_clk                 rom_sys_0/clk
 # interrupts
 
 ad_connect sys_concat_intc/dout sys_ps7/IRQ_F2P
-ad_connect sys_concat_intc/In15 GND
-# ad_connect sys_concat_intc/In15 axi_iic_gnss/iic2intc_irpt
+ad_connect sys_concat_intc/In15 axi_uart_gnss/interrupt
 ad_connect sys_concat_intc/In14 axi_iic_main/iic2intc_irpt
 ad_connect sys_concat_intc/In13 GND
 ad_connect sys_concat_intc/In12 GND
@@ -192,7 +197,7 @@ ad_connect sys_concat_intc/In0  GND
 
 ad_cpu_interconnect 0x45000000 axi_sysid_0
 ad_cpu_interconnect 0x41600000 axi_iic_main
-# ad_cpu_interconnect 0x41620000 axi_iic_gnss
+ad_cpu_interconnect 0x41620000 axi_uart_gnss
 
 # ad9361
 
@@ -340,6 +345,7 @@ ad_ip_instance sinewave_generator sinewave_gen
 
 ad_connect axi_ad9361/l_clk sinewave_gen/clock
 ad_connect util_ad9361_divclk_reset/peripheral_reset sinewave_gen/reset
+ad_connect feedback_LED sinewave_gen/feedback_LED
 
 # Used for the first set of parameters
 ad_ip_instance axi_gpio sinewavecontrol
@@ -353,10 +359,10 @@ ad_connect gnssdata/gpio_io_o sinewave_gen/nav_data
 # The i line is the feedback line
 ad_connect gnssdata/gpio_io_i sinewave_gen/nav_out
 
-# Current UCT time from the GNSS receiver
-ad_ip_instance axi_gpio UCTtime
-ad_cpu_interconnect 0x780E0000 UCTtime
-ad_connect UCTtime/gpio_io_o sinewave_gen/UCTclock 
+# Current UTC time from the GNSS receiver
+ad_ip_instance axi_gpio UTCtime
+ad_cpu_interconnect 0x780E0000 UTCtime
+ad_connect UTCtime/gpio_io_o sinewave_gen/UTCclock 
 
 # Used for the second set of parameters
 ad_ip_instance axi_gpio sinewavecontrol2
