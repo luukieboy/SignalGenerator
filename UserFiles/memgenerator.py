@@ -1,20 +1,38 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import sys
+
+
+SAMPLESIZE = 2048
+
+
+
 
 SHOWFULLWAVE = True
 SHOWQUARTERWAVE = True
 
-SAMPLESIZE = 2044
+
+
+
+
+
+
+
 step_size = 1
 amplitude = 32767
 
-sinewaves = 10
+sinewaves = 2
 rangelist = np.linspace(0, 0.25, SAMPLESIZE // 4 + 1)
+rangelist2 = np.linspace(-1, 0, SAMPLESIZE + 1)
 
 file = "hdl/library/sinewave_generator/src/sine.mem"
-fullfile = "UserFiles/fullsinewave.txt"
+fullfile = "hdl/library/sinewave_generator/src/fullsine.mem"
 
 values = []
+
+if (SAMPLESIZE / 4) % 1 != 0:
+    print("[ERROR] The sample size has to be divisible by four in order to create an accurate sinewave using quarter lookup table. Change sample size and run again.")
+    sys.exit()
 
 # Make sure the file is empty
 with open(file, "w") as f:
@@ -35,22 +53,17 @@ with open(fullfile, "w") as f:
 fullvaluelist = []
 
 with open(fullfile, "w") as f:
-    for i in range(0, SAMPLESIZE // 4 + 1):
-        sinval = int(amplitude * np.sin(2 * np.pi * rangelist[i]))
-        hexi = hex(sinval)[2:]
-        f.write(str(hexi) + '\n')
-        fullvaluelist.append(hexi)
-    for i in range(SAMPLESIZE // 4, 0, -1):
-        sinval = int(amplitude * np.sin(2 * np.pi * rangelist[i]))
-        hexi = hex(sinval)[2:]
-        f.write(str(hexi) + '\n')
-        fullvaluelist.append(hexi)
-
-    for item in fullvaluelist:
-        f.write(str(hex(int(item, 16) * -1)) + "\n")
+    for item in rangelist2[:-1]:
+        sinval = int(amplitude * np.sin(2 * np.pi * item))
+        hexi = f"{sinval & 0xFFFF:04x}"
+        if item == rangelist2[-2]: f.write(str(hexi))
+        else: f.write(str(hexi) + "\n")
 
 with open(fullfile, "r") as f:
     full_data = [int(x.strip(), 16) for x in f.readlines()]
+
+# The second part of the data has to be negated, it is signed hexadecimal
+full_data[SAMPLESIZE // 2+1:] = [x - 2 * amplitude for x in full_data[SAMPLESIZE // 2+1:]]
 
 if SHOWFULLWAVE: plt.plot(full_data * sinewaves)
 

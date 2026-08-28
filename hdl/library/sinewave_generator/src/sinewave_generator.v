@@ -44,8 +44,8 @@ module sinewave_generator #(
     output wire signed [15:0] Q0,
     output wire [31:0] param_3_out,
     output wire [31:0] nav_out,
-    output reg feedback_LED,
-    output reg [31:0] warning_counter
+    output reg feedback_LED
+
    );
 
     wire [9:0] stepSize;
@@ -62,7 +62,7 @@ module sinewave_generator #(
     reg [31:0] i;
     reg [15:0] frac_counter;
     reg [31:0] error_counter;
-    // reg [31:0] warning_counter;
+    reg [31:0] warning_counter;
     
     // Code is 1 at startup. To prevent it tampering with data_comb, disable it from influencing when 
     // modulation is not code only or BPSK.
@@ -106,14 +106,13 @@ module sinewave_generator #(
             end else warning_counter <= warning_counter - 1;
         end
 
-
         if (in_reset) begin
             b <= param[30:16];
             i <= param_2;
             frac_counter <= fraction;
         end else begin
             // Ensure modulation is not turned off 
-            if ((enable_0 | enable_1) & ~param[0]) begin
+            if ((enable_0 | enable_1)) begin
                 if (data_valid | param[2]) begin
                     if (~param_3[16] & ~param_3[17]) feedback_LED <= 0;
                     if (frac_counter == 0) begin
@@ -143,6 +142,7 @@ module sinewave_generator #(
                         frac_counter <= frac_counter - 1;
                     end
                 end else if (~param_3[16] & ~param_3[17] & ~data_valid & ~param[0]) feedback_LED <= 1; // When data is not ready, no modulation is applied and an LED is turned on for visual indication
+                else feedback_LED <= 0;
             end 
         end
     end
