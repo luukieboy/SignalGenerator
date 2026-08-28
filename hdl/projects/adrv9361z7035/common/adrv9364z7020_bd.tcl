@@ -326,9 +326,9 @@ ad_connect axi_ad9361/l_clk axi_ad9361_dac_fifo/dout_clk
 ad_connect axi_ad9361/rst axi_ad9361_dac_fifo/dout_rst
 ad_connect axi_ad9361/l_clk axi_ad9361_dac_fifo/din_clk
 ad_connect util_ad9361_divclk_reset/peripheral_aresetn axi_ad9361_dac_fifo/din_rstn
-ad_connect axi_ad9361_dac_fifo/dout_enable_0 axi_ad9361/dac_enable_i0
-ad_connect axi_ad9361_dac_fifo/dout_valid_0 axi_ad9361/dac_valid_i0
-ad_connect axi_ad9361_dac_fifo/dout_data_0 axi_ad9361/dac_data_i0
+# ad_connect axi_ad9361_dac_fifo/dout_enable_0 axi_ad9361/dac_enable_i0
+# ad_connect axi_ad9361_dac_fifo/dout_valid_0 axi_ad9361/dac_valid_i0
+# ad_connect axi_ad9361_dac_fifo/dout_data_0 axi_ad9361/dac_data_i0
 ad_connect axi_ad9361_dac_fifo/dout_enable_1 axi_ad9361/dac_enable_q0
 ad_connect axi_ad9361_dac_fifo/dout_valid_1 axi_ad9361/dac_valid_q0
 ad_connect axi_ad9361_dac_fifo/dout_data_1 axi_ad9361/dac_data_q0
@@ -343,7 +343,7 @@ ad_connect axi_ad9361_dac_fifo/dout_unf axi_ad9361/dac_dunf
 # instance: Sine wave generator
 ad_ip_instance sinewave_generator sinewave_gen
 
-ad_connect axi_ad9361/l_clk sinewave_gen/clock
+ad_connect util_ad9361_divclk/clk_out sinewave_gen/clock
 ad_connect util_ad9361_divclk_reset/peripheral_reset sinewave_gen/reset
 ad_connect feedback_LED sinewave_gen/feedback_LED
 
@@ -378,16 +378,16 @@ ad_connect sinewavecontrol3/gpio_io_i sinewave_gen/param_3_out
 
 # dac-path channel unpack
 
-ad_ip_instance util_upack2 util_ad9361_dac_upack { \
-  NUM_OF_CHANNELS 4 \
-  SAMPLE_DATA_WIDTH 16 \
- }
+# ad_ip_instance util_upack2 util_ad9361_dac_upack { \
+#   NUM_OF_CHANNELS 4 \
+#   SAMPLE_DATA_WIDTH 16 \
+#  }
 
-ad_connect util_ad9361_divclk/clk_out util_ad9361_dac_upack/clk
-ad_connect util_ad9361_divclk_reset/peripheral_reset util_ad9361_dac_upack/reset
+# ad_connect util_ad9361_divclk/clk_out util_ad9361_dac_upack/clk
+# ad_connect util_ad9361_divclk_reset/peripheral_reset util_ad9361_dac_upack/reset
 
-ad_connect util_ad9361_dac_upack/fifo_rd_en axi_ad9361_dac_fifo/din_valid_0
-ad_connect util_ad9361_dac_upack/fifo_rd_underflow axi_ad9361_dac_fifo/din_unf
+# ad_connect util_ad9361_dac_upack/fifo_rd_en axi_ad9361_dac_fifo/din_valid_0
+# ad_connect util_ad9361_dac_upack/fifo_rd_underflow axi_ad9361_dac_fifo/din_unf
 
 # for {set i 0} {$i < 4} {incr i} {
 #   ad_connect util_ad9361_dac_upack/enable_$i axi_ad9361_dac_fifo/din_enable_$i
@@ -415,9 +415,9 @@ ad_connect util_ad9361_divclk/clk_out axi_ad9361_dac_dma/m_axis_aclk
 # ad_connect my_module/I1 axi_ad9361_dac_fifo/din_data_0
 # ad_connect my_module/Q1 axi_ad9361_dac_fifo/din_data_1
 
-ad_connect sinewave_gen/enable_0 axi_ad9361_dac_fifo/din_enable_0
-ad_connect sinewave_gen/valid_0 axi_ad9361_dac_fifo/din_valid_in_0   
-ad_connect sinewave_gen/I0 axi_ad9361_dac_fifo/din_data_0
+ad_connect sinewave_gen/enable_0 axi_ad9361/dac_enable_i0
+# ad_connect sinewave_gen/valid_0 axi_ad9361/dac_valid_i0   
+ad_connect sinewave_gen/I0 axi_ad9361/dac_data_i0
 
 ad_connect sinewave_gen/enable_1 axi_ad9361_dac_fifo/din_enable_1
 ad_connect sinewave_gen/valid_1 axi_ad9361_dac_fifo/din_valid_in_1   

@@ -25,9 +25,9 @@ module tb_sine_wave_generator(
     parameter tb_STARTVALUEREGISTER1 = 14'b11111111111111;         // Same for all codes
     parameter tb_STARTVALUEREGISTER2 = 14'b111010010000;
     
-    parameter tb_SAMPLESIZE = 128;
+    parameter tb_SAMPLESIZE = 2048;
     parameter halfSAMPLESIZE = tb_SAMPLESIZE / 2;
-    parameter tb_AMPLITUDE = 32767;
+    parameter tb_AMPLITUDE = 4095;
     
     parameter frequency = 1207140000;
     parameter MAX = 500000000;

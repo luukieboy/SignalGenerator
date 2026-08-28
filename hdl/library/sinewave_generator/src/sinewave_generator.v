@@ -19,7 +19,7 @@ module sinewave_generator #(
     parameter STARTVALUEREGISTER2 = 14'b111010010000,
     
     parameter SAMPLESIZE = 2048,
-    parameter AMPLITUDE = 32767
+    parameter AMPLITUDE = 4095
     // Chip rate of the PRN code is 1.023 MHz. This means 1575.42 / 1.023 = 1540 so the code goes 1540 times slower 
     // than the sinewave as a whole. So we do have to take into account sampling frequency. If a sine wave consists of 
     // 20 samples, the code_enable frequency is divided by 20 again
@@ -45,7 +45,6 @@ module sinewave_generator #(
     output wire [31:0] param_3_out,
     output wire [31:0] nav_out,
     output reg feedback_LED
-
    );
 
     wire [9:0] stepSize;
@@ -77,7 +76,7 @@ module sinewave_generator #(
     assign param_3_out[15:0] = SAMPLESIZE;
 
     // For BPSK not necessary, here for future development and use
-//    assign Q0 = 0; 
+    assign Q0 = 0; 
 
     initial begin
         b = param[30:16];

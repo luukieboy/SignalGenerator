@@ -52,14 +52,14 @@ ad_connect util_ad9361_divclk/clk_out ila_0/clk
 
 # Connect probes
 
-ad_connect sinewave_gen/param_3                              ila_0/probe1
-# ad_connect sinewave_gen/feedback_LED          ila_0/probe3
-ad_connect sinewave_gen/warning_counter            ila_0/probe5
+ad_connect sinewave_gen/param                              ila_0/probe1
+ad_connect sinewave_gen/feedback_LED          ila_0/probe3
+ad_connect sinewave_gen/param_3            ila_0/probe5
 # ad_connect sinewave_gen/counter              ila_0/probe14
 # ad_connect sinewave_gen/datavalid         ila_0/probe2
 # ad_connect sinewave_gen/selector          ila_0/probe3
 # ad_connect sinewave_gen/data_send         ila_0/probe4
-# ad_connect sinewave_gen/data_enable       ila_0/probe6
+# ad_connect sinewave_gen/data_valid       ila_0/probe6
 # ad_connect sinewave_gen/fecvalid        ila_0/probe7
 # ad_connect sinewave_gen/crcvalid        ila_0/probe8
 
