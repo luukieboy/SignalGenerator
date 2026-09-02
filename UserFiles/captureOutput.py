@@ -6,14 +6,14 @@ import sys
 import iio
 
 stepsize = 1
-samplesize = 10000
+samplesize = 2048
 
 # Set in the Static IP tutorial
 IP_ADDRESS = "192.168.255.1"
 
 
 
-BUFFERSIZE = 800             # Number of samples that are collected from the board
+BUFFERSIZE = 5000             # Number of samples that are collected from the board
 
 # Choose a feedback loop
 # 0 is loopback mode, which captures the output after the FPGA module
@@ -56,6 +56,7 @@ except: title = f"Sinewave generator output"
 if (FEEDBACKLOOP == 0): sdr._set_iio_debug_attr_str("loopback", "1")
 elif (FEEDBACKLOOP == 1):
     changeAttribute("ad9361-phy", "voltage0", "gain_control_mode", "manual")
+    changeAttribute("ad9361-phy", "voltage0", "hardwaregain", "0.000000", True)
     changeAttribute("ad9361-phy", "altvoltage0", "frequency", FREQUENCY, True)
     changeAttribute("ad9361-phy", "altvoltage1", "frequency", FREQUENCY, True)
     changeAttribute("ad9361-phy", "voltage0", "rf_port_select", "TX_MONITOR1")
@@ -72,7 +73,7 @@ data = sdr.rx()
 
 # Data is collected in decimal values
 data_float = data.real
-I_signal = [int(x) for x in data_float]
+I_signal = [x for x in data_float]
 
 
 sample_rate = sdr.sample_rate

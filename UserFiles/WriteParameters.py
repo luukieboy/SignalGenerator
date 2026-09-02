@@ -17,10 +17,10 @@ SAMPLE_RATE = 30720000                   # Samples per second
 BANDWIDTH = 1800000                      # Hz
 
 # Custom parameters
-STEP_SIZE = 50                            # Defines how quickly the program runs through samplesize.
+STEP_SIZE = 1                            # Defines how quickly the program runs through samplesize.
 CHIP_RATE = 1200000000                       # Hz, the rate at which the PRN code is modulated onto the carrier wave.
 DATA_RATE = 120000                           # Hz, the rate at which data is modulated onto the carrier wave
-MODULATION = 3                         # 0 is no modulation (only carrier wave), 1 is data bits only, 2 is code bits only, 3 is BPSK
+MODULATION = 0                         # 0 is no modulation (only carrier wave), 1 is data bits only, 2 is code bits only, 3 is BPSK
 
 
 

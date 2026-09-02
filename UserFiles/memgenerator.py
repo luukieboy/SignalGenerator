@@ -4,11 +4,11 @@ import sys
 
 
 SAMPLESIZE = 2048
+amplitude = 2047
 
 
 
-
-SHOWFULLWAVE = True
+SHOWFULLWAVE = False
 SHOWQUARTERWAVE = True
 
 
@@ -19,7 +19,6 @@ SHOWQUARTERWAVE = True
 
 
 step_size = 1
-amplitude = 32767
 
 sinewaves = 2
 rangelist = np.linspace(0, 0.25, SAMPLESIZE // 4 + 1)
@@ -55,7 +54,7 @@ fullvaluelist = []
 with open(fullfile, "w") as f:
     for item in rangelist2[:-1]:
         sinval = int(amplitude * np.sin(2 * np.pi * item))
-        hexi = f"{sinval & 0xFFFF:04x}"
+        hexi = f"{sinval & 0xFFF:04x}"
         if item == rangelist2[-2]: f.write(str(hexi))
         else: f.write(str(hexi) + "\n")
 
